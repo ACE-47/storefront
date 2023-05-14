@@ -13,7 +13,7 @@ from django.db.models.aggregates import Count
 
 from .filters import ProductFilter
 from .models import Cart, CartItem, OrderItem, Product,Collection,Review
-from .serializers import AddCartItemSerialazer, CartItemSerializer, CartSerializer, ProductSerializer ,CollectionSerializer,ReviewSerializer
+from .serializers import AddCartItemSerialazer, CartItemSerializer, CartSerializer, ProductSerializer ,CollectionSerializer,ReviewSerializer, UpdatedCartItemSerializer
 from .pagination import DefaultPagination
 # Create your views here.
 
@@ -125,10 +125,13 @@ class CartViewSet(CreateModelMixin,
 
 class CartItemViewSet(ModelViewSet):
     # serializer_class =CartItemSerializer
+    http_method_names =['get','patch','post','delete']
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AddCartItemSerialazer
+        elif self.request.method == 'PATCH':
+            return UpdatedCartItemSerializer
         return CartItemSerializer
     
     def get_serializer_context(self):
