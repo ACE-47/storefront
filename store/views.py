@@ -16,8 +16,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models.aggregates import Count
 
 from .filters import ProductFilter
-from .models import Cart, CartItem, Customer, Order, OrderItem, Product,Collection,Review
-from .serializers import AddCartItemSerialazer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer ,CollectionSerializer,ReviewSerializer, UpdateOrderSerializer, UpdatedCartItemSerializer
+from .models import Cart, CartItem, Customer, Order, OrderItem, Product,Collection, ProductImage,Review
+from .serializers import AddCartItemSerialazer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductImageSerializer, ProductSerializer ,CollectionSerializer,ReviewSerializer, UpdateOrderSerializer, UpdatedCartItemSerializer
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 # Create your views here.
@@ -54,7 +54,7 @@ from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 #         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class ProductViewSet(ModelViewSet):
-    queryset =Product.objects.all()
+    queryset =Product.objects.prefetch_related('images').all()
     serializer_class =ProductSerializer
     filter_backends =[DjangoFilterBackend,SearchFilter,OrderingFilter]
     # filterset_fields = ['collection_id']
@@ -212,3 +212,15 @@ class OrderViewSet(ModelViewSet):
             return Order.objects.all()
         customer_id= Customer.objects.only('id').get(user_id = user.id )
         return Order.objects.filter(customer_id = customer_id)
+    
+
+
+class ProductImageViewSet(ModelViewSet):
+
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id = self.kwargs['product_pk'])
+
+    serializer_class = ProductImageSerializer
