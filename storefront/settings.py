@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -163,3 +164,20 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL ='core.User'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 2525 # in default it is 25 but beacuse its fact smtp so it is 2525
+DEFAULT_FROM_EMAIL = 'from@ace47.com'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_BEAT_SCHEDULE ={
+    'notify_customers':{
+        'task': 'playground.tasks.notify_customers',
+        # 'schedule': crontab(day_of_week=2,hour=6,minute=50)
+        'schedule' : 5,
+        'args': ['Hellow World'],
+        # 'kwargs':{}
+    }
+}
