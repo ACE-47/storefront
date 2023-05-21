@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'djoser',
+    'silk',
     'playground',
     'store',
     'tags',
@@ -58,6 +59,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += ['silk.middleware.SilkyMiddleware']
 
 ROOT_URLCONF = 'storefront.urls'
 
@@ -89,7 +93,7 @@ DATABASES = {
         'NAME': 'storefront3',
         'HOST': 'localhost',
         'USER':'root',
-        'PASSWORD':'0357159456ace47M'
+        'PASSWORD':'root'
     }
 }
 
