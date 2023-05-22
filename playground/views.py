@@ -1,9 +1,10 @@
 
 
-from django.core.mail import BadHeaderError
-from templated_mail.mail import BaseEmailMessage
+# from django.core.mail import BadHeaderError
+# from templated_mail.mail import BaseEmailMessage
 from django.shortcuts import render
-from .tasks import notify_customers
+import requests
+# from .tasks import notify_customers
 
 
 # Create your views here.
@@ -16,7 +17,8 @@ def hello(request):
     # except BadHeaderError:
     #     pass
 
-    notify_customers.delay('Hello World')
+    # notify_customers.delay('Hello World')
+    requests.get('https://httpbin.org/delay/2')
     return render(request,'hello.html',{
         'name':'Haider',
     })
